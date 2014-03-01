@@ -4,7 +4,7 @@ namespace :simplegit do
     task :deploy do
 
         on roles :all do
-            info "--> Deploy from #{fetch(:repository)} on branch #{fetch(:branch)}"
+            info "--> Deploy from #{fetch(:repo_url)} on branch #{fetch(:branch)}"
 
             begin
                 execute "ls #{fetch(:deploy_to)}/.git"
@@ -33,7 +33,7 @@ namespace :simplegit do
     desc 'Performs the initial setup and fetch of the repo'
     task :prepare do
         execute "cd #{fetch(:deploy_to)} && git init"
-        execute "cd #{fetch(:deploy_to)} && git remote add origin #{fetch(:repository)}"
+        execute "cd #{fetch(:deploy_to)} && git remote add origin #{fetch(:repo_url)}"
     end
 
 end
