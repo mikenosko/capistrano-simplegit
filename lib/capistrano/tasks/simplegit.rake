@@ -9,7 +9,8 @@ namespace :simplegit do
             begin
                 execute "ls #{fetch(:simplegit_deploy)}/.git"
             rescue
-                invoke 'simplegit:prepare'
+                execute "cd #{fetch(:simplegit_deploy)} && git init"
+                execute "cd #{fetch(:simplegit_deploy)} && git remote add origin #{fetch(:simplegit_repo)}"
             end
 
             info "--> Updating code from remote repository"
@@ -27,14 +28,6 @@ namespace :simplegit do
                 execute "cd #{fetch(:simplegit_deploy)} && git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)} ;"
             end
             execute "git submodule update --init --recursive"
-        end
-    end
-
-    desc 'Performs the initial setup and fetch of the repo'
-    task :prepare do
-        on roles :all do
-            execute "cd #{fetch(:simplegit_deploy)} && git init"
-            execute "cd #{fetch(:simplegit_deploy)} && git remote add origin #{fetch(:simplegit_repo)}"
         end
     end
 
