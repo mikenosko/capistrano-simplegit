@@ -1,10 +1,9 @@
-76859# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'capistrano-simplegit'
-  spec.version       = '0.0.4'
+  spec.version       = '0.0.6'
   spec.authors       = ['Ross Riley']
   spec.email         = ['riley.ross@gmail.com']
   spec.description   = %q{A simple Git Deploy Command for Capistrano 3.x}

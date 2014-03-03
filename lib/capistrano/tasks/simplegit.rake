@@ -4,10 +4,10 @@ namespace :simplegit do
     task :deploy do
 
         on roles :all do
-            info "--> Deploy from #{fetch(:repo_url)} on branch #{fetch(:branch)}"
+            info "--> Deploy from #{fetch(:simplegit_repo)} on branch #{fetch(:simplegit_branch)}"
 
             begin
-                execute "ls #{fetch(:deploy_to)}/.git"
+                execute "ls #{fetch(:simplegit_deploy)}/.git"
             rescue
                 invoke 'simplegit:prepare'
             end
@@ -15,16 +15,16 @@ namespace :simplegit do
             info "--> Updating code from remote repository"
 
             begin
-                execute "cd #{fetch(:deploy_to)} && git fetch"
+                execute "cd #{fetch(:simplegit_deploy)} && git fetch"
             rescue
                 error "Unable to connect to remote repository, check your configuration, and that a valid ssh key exists for remote server."
                 exit
             end
 
             begin
-                execute "cd #{fetch(:deploy_to)} && git show-branch #{fetch(:branch)} && git checkout #{fetch(:branch)} ; git reset --hard origin/#{fetch(:branch)}"
+                execute "cd #{fetch(:simplegit_deploy)} && git show-branch #{fetch(:simplegit_branch)} && git checkout #{fetch(:simplegit_branch)} ; git reset --hard origin/#{fetch(:simplegit_branch)}"
             rescue
-                execute "cd #{fetch(:deploy_to)} && git checkout -b #{fetch(:branch)} origin/#{fetch(:branch)} ;"
+                execute "cd #{fetch(:simplegit_deploy)} && git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)} ;"
             end
             execute "git submodule update --init --recursive"
         end
@@ -32,8 +32,21 @@ namespace :simplegit do
 
     desc 'Performs the initial setup and fetch of the repo'
     task :prepare do
-        execute "cd #{fetch(:deploy_to)} && git init"
-        execute "cd #{fetch(:deploy_to)} && git remote add origin #{fetch(:repo_url)}"
+        on roles :all do
+            execute "cd #{fetch(:simplegit_deploy)} && git init"
+            execute "cd #{fetch(:simplegit_deploy)} && git remote add origin #{fetch(:simplegit_repo)}"
+        end
+    end
+
+end
+
+namespace :load do
+
+    task :defaults do
+        set :simplegit_deploy, ->   { fetch(:deploy_to) }
+        set :simplegit_repo, ->     { fetch(:repo_url) }
+        set :simplegit_branch, ->   { fetch(:branch) }
+
     end
 
 end
