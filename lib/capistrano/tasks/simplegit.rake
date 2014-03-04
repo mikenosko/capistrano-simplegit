@@ -10,21 +10,16 @@ namespace :simplegit do
                 execute "cd #{fetch(:simplegit_deploy)} && git remote add origin #{fetch(:simplegit_repo)}"
             end
 
-            info "--> Updating code from remote repository"
-
-            begin
-                execute "cd #{fetch(:simplegit_deploy)} && git fetch"
-            rescue
+            unless test :git, :'ls-remote', fetch(:repo_url)
                 error "Unable to connect to remote repository, check your configuration, and that a valid ssh key exists for remote server."
-                exit
+                exit 1
             end
 
-            begin
-                execute "cd #{fetch(:simplegit_deploy)} && git show-branch #{fetch(:simplegit_branch)} && git checkout #{fetch(:simplegit_branch)} ; git reset --hard origin/#{fetch(:simplegit_branch)}"
-            rescue
-                execute "cd #{fetch(:simplegit_deploy)} && git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)} ;"
+            within fetch(:simplegit_deploy) do
+                execute "cd #{fetch(:simplegit_deploy)} && git fetch"
+                execute "git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)}"
+                execute "git submodule update --init --recursive"
             end
-            execute "git submodule update --init --recursive"
         end
     end
 
