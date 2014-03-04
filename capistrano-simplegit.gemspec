@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'capistrano-simplegit'
-  spec.version       = '0.0.8'
+  spec.version       = '0.0.9'
   spec.authors       = ['Ross Riley']
   spec.email         = ['riley.ross@gmail.com']
   spec.description   = %q{A simple Git Deploy Command for Capistrano 3.x}
