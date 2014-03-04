@@ -17,7 +17,7 @@ namespace :simplegit do
 
             within fetch(:simplegit_deploy) do
                 execute "cd #{fetch(:simplegit_deploy)} && git fetch"
-                if test "[ git show-branch #{fetch(:simplegit_branch)} ]"
+                if test :git, :'show-branch', fetch(:simplegit_branch)
                     execute "git checkout #{fetch(:simplegit_branch)} ; git reset --hard origin/#{fetch(:simplegit_branch)}"
                 else
                     execute "git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)}"
