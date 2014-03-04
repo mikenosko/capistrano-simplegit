@@ -5,10 +5,7 @@ namespace :simplegit do
 
         on roles :all do
             info "--> Deploy from #{fetch(:simplegit_repo)} on branch #{fetch(:simplegit_branch)}"
-
-            begin
-                execute "ls #{fetch(:simplegit_deploy)}/.git"
-            rescue
+            unless test "[ -d #{fetch(:simplegit_deploy)}/.git ]"
                 execute "cd #{fetch(:simplegit_deploy)} && git init"
                 execute "cd #{fetch(:simplegit_deploy)} && git remote add origin #{fetch(:simplegit_repo)}"
             end
