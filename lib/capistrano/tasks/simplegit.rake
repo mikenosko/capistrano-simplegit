@@ -16,13 +16,14 @@ namespace :simplegit do
             end
 
             within fetch(:simplegit_deploy) do
-                execute "cd #{fetch(:simplegit_deploy)} && git fetch"
+                execute :git, "fetch"
                 if test :git, :'show-branch', fetch(:simplegit_branch)
-                    execute "git checkout #{fetch(:simplegit_branch)} ; git reset --hard origin/#{fetch(:simplegit_branch)}"
+                  execute :git, "checkout #{fetch(:simplegit_branch)}"
+                  execute :git, "reset --hard origin/#{fetch(:simplegit_branch)}"
                 else
-                    execute "git checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)}"
+                  execute :git, "checkout -b #{fetch(:simplegit_branch)} origin/#{fetch(:simplegit_branch)}"
                 end
-                execute "git submodule update --init --recursive"
+                execute :git, "submodule update --init --recursive"
             end
         end
     end
